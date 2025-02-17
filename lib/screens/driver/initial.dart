@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:droute_driver_frontend/styles/color/app_color.dart';
 
-class HomePage extends StatelessWidget {
+class Initial extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

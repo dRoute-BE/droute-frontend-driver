@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:droute_driver_frontend/styles/color/app_color.dart';
+import 'package:droute_driver_frontend/screens/driver/enable_location.dart';
 
 class TermsAndConditionsPage extends StatefulWidget {
-
   @override
   _TermsAndConditionsPageState createState() => _TermsAndConditionsPageState();
 }
@@ -12,16 +12,51 @@ class _TermsAndConditionsPageState extends State<TermsAndConditionsPage> {
 
   // Sample API Response (Replace this with actual API call)
   final List<Map<String, String>> termsData = [
-    {"title": "1. Introduction", "description": "Welcome to DRoute. By using our services, you agree to these terms."},
-    {"title": "2. User Responsibilities", "description": "You must provide accurate information and comply with all local laws."},
-    {"title": "3. Payment & Transactions", "description": "All payments are final and non-refundable unless stated otherwise."},
-    {"title": "4. Liability", "description": "We are not responsible for losses incurred during transit."},
-    {"title": "5. Privacy Policy", "description": "Your personal data will be handled according to our privacy policy."},
-    {"title": "6. Modifications", "description": "We may update these terms at any time without prior notice."},
-    {"title": "7. Liability", "description": "We are not responsible for losses incurred during transit."},
-    {"title": "8. Privacy Policy", "description": "Your personal data will be handled according to our privacy policy."},
-    {"title": "9. Modifications", "description": "We may update these terms at any time without prior notice."},
-
+    {
+      "title": "1. Introduction",
+      "description":
+          "Welcome to DRoute. By using our services, you agree to these terms.",
+    },
+    {
+      "title": "2. User Responsibilities",
+      "description":
+          "You must provide accurate information and comply with all local laws.",
+    },
+    {
+      "title": "3. Payment & Transactions",
+      "description":
+          "All payments are final and non-refundable unless stated otherwise.",
+    },
+    {
+      "title": "4. Liability",
+      "description":
+          "We are not responsible for losses incurred during transit.",
+    },
+    {
+      "title": "5. Privacy Policy",
+      "description":
+          "Your personal data will be handled according to our privacy policy.",
+    },
+    {
+      "title": "6. Modifications",
+      "description":
+          "We may update these terms at any time without prior notice.",
+    },
+    {
+      "title": "7. Liability",
+      "description":
+          "We are not responsible for losses incurred during transit.",
+    },
+    {
+      "title": "8. Privacy Policy",
+      "description":
+          "Your personal data will be handled according to our privacy policy.",
+    },
+    {
+      "title": "9. Modifications",
+      "description":
+          "We may update these terms at any time without prior notice.",
+    },
   ];
 
   @override
@@ -48,10 +83,7 @@ class _TermsAndConditionsPageState extends State<TermsAndConditionsPage> {
             child: const SafeArea(
               child: Text(
                 "Terms & Conditions",
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
             ),
           ),
@@ -62,31 +94,32 @@ class _TermsAndConditionsPageState extends State<TermsAndConditionsPage> {
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start, // Left-aligned
-                  children: termsData.map((term) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            term["title"]!,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
+                  children:
+                      termsData.map((term) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                term["title"]!,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                term["description"]!,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: 5),
-                          Text(
-                            term["description"]!,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.black54,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
+                        );
+                      }).toList(),
                 ),
               ),
             ),
@@ -122,17 +155,27 @@ class _TermsAndConditionsPageState extends State<TermsAndConditionsPage> {
                     ),
                     const Text(
                       "I accept the Terms & Conditions",
-                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ],
                 ),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: _isAccepted
-                        ? () {
-                    }
-                        : null,
+                    onPressed:
+                        _isAccepted
+                            ? () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EnableLocation(),
+                                ),
+                              );
+                            }
+                            : null,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColor.primaryColor,
                       shape: RoundedRectangleBorder(

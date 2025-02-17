@@ -1,3 +1,4 @@
+import 'package:droute_driver_frontend/screens/driver/enable_location.dart';
 import 'package:flutter/material.dart';
 import 'package:droute_driver_frontend/styles/color/app_color.dart';
 import 'package:droute_driver_frontend/models/auth_model.dart';
@@ -5,6 +6,7 @@ import 'package:droute_driver_frontend/screens/auth/signin.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
+
   @override
   State<SignUpPage> createState() => _SignUpPageState();
 }
@@ -15,7 +17,8 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _mobileController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   bool _isLoading = false;
   String? _errorMessage;
@@ -27,18 +30,21 @@ class _SignUpPageState extends State<SignUpPage> {
     _emailController.clear();
     _mobileController.clear();
     _confirmPasswordController.clear();
-
   }
+
   // Request OTP action
   Future<void> _requestOtp() async {
-
-    if (_fullNameController.text.isEmpty || _emailController.text.isEmpty || _passwordController.text.isEmpty ||_mobileController.text.isEmpty || _confirmPasswordController.text.isEmpty) {
+    if (_fullNameController.text.isEmpty ||
+        _emailController.text.isEmpty ||
+        _passwordController.text.isEmpty ||
+        _mobileController.text.isEmpty ||
+        _confirmPasswordController.text.isEmpty) {
       _errorMessage = "Please Enter All given Fields!";
       _errorMessageColor = Colors.red;
 
       return;
-    };
-
+    }
+    ;
 
     if (_passwordController.text != _confirmPasswordController.text) {
       setState(() {
@@ -119,7 +125,12 @@ class _SignUpPageState extends State<SignUpPage> {
                     topRight: Radius.circular(20),
                   ),
                 ),
-                padding: const EdgeInsets.only(top: 16, left: 16, right: 16, bottom: 50),
+                padding: const EdgeInsets.only(
+                  top: 16,
+                  left: 16,
+                  right: 16,
+                  bottom: 50,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -134,7 +145,9 @@ class _SignUpPageState extends State<SignUpPage> {
                     CustomText(text: "Full Name:"),
                     TextFormField(
                       controller: _fullNameController,
-                      decoration: InputDecoration(hintText: "Enter Your Fullname"),
+                      decoration: InputDecoration(
+                        hintText: "Enter Your Fullname",
+                      ),
                     ),
                     const SizedBox(height: 16),
                     CustomText(text: "Email:"),
@@ -147,7 +160,9 @@ class _SignUpPageState extends State<SignUpPage> {
                     CustomText(text: "Mobile Number:"),
                     TextFormField(
                       controller: _mobileController,
-                      decoration: InputDecoration(hintText: "Enter mobile Number"),
+                      decoration: InputDecoration(
+                        hintText: "Enter mobile Number",
+                      ),
                     ),
                     SizedBox(height: 10),
                     CustomText(text: "Password:"),
@@ -161,7 +176,9 @@ class _SignUpPageState extends State<SignUpPage> {
                     TextFormField(
                       controller: _confirmPasswordController,
                       obscureText: true,
-                      decoration: InputDecoration(hintText: "Enter Confirm Password"),
+                      decoration: InputDecoration(
+                        hintText: "Enter Confirm Password",
+                      ),
                     ),
                     SizedBox(height: 10),
 
@@ -175,48 +192,63 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     _isLoading
                         ? Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                      decoration: BoxDecoration(
-                        color: AppColor.primaryColor,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                        ),
-                      ),
-                    )
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: 20,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColor.primaryColor,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
+                          ),
+                        )
                         : InkWell(
-                      onTap: _requestOtp,
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                        decoration: BoxDecoration(
-                          color: AppColor.primaryColor,
-                          borderRadius: BorderRadius.circular(10),
+                          onTap: _requestOtp,
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 10,
+                              horizontal: 20,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColor.primaryColor,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Text(
+                              "Request OTP",
+                              style: TextStyle(color: Colors.white),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
                         ),
-                        child: const Text(
-                          "Request OTP",
-                          style: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
 
                     SizedBox(height: 16),
                     InkWell(
-                      onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>SignInPage()));
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => SignInPage()),
+                        );
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("Already Have an Account?", style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text(
+                            "Already Have an Account?",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                           SizedBox(width: 5),
                           Text(
                             "Sign In",
-                            style: TextStyle(color: AppColor.primaryColor, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                              color: AppColor.primaryColor,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ],
                       ),
