@@ -112,7 +112,9 @@ const HelpScreen = ({ navigation }) => {
             submitEmegencyQuery,
             cancelEmegencyQuery,
             showEmergencyDialog,
-            setshowEmergencyDialog
+            setshowEmergencyDialog,
+            "Submit",
+            "Cancel"
           )}
           {circularLoader(isLoading)}
         </ScrollView>

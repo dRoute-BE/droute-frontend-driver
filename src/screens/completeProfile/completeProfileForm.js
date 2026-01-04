@@ -45,11 +45,11 @@ import { showSnackbar } from "../../redux/slice/snackbarSlice";
 const CompleteProfileForm = () => {
   const [imageloading, setImageLoading] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
   const [currentImageSetter, setCurrentImageSetter] = useState(null);
   const [currentImageLabel, setCurrentImageLabel] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const user = useSelector(selectUser);

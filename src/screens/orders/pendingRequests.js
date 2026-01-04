@@ -25,144 +25,79 @@ import RNModal from "react-native-modal";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { RefreshControl } from "react-native";
 import { UserCardLoader, UserInfo } from "../../components/userCards";
+import { useSelector } from "react-redux";
+import { selectAuthloader } from "../../redux/selector/authSelector";
 
-const USERS = [
-  {
-    id: 1,
-    user_key: "user1key",
-    owner_legal_name: "User One",
-    mobile_number: "+910000000001",
-    status: "New",
-    role: "user",
-  },
-  {
-    id: 2,
-    user_key: "user2key",
-    owner_legal_name: "User Two",
-    mobile_number: "+910000000002",
-    status: "Active",
-    role: "user",
-  },
-  {
-    id: 3,
-    user_key: "user3key",
-    owner_legal_name: "User Three",
-    mobile_number: "+910000000003",
-    status: "Inactive",
-    role: "vendor",
-  },
-  {
-    id: 4,
-    user_key: "user4key",
-    owner_legal_name: "User Four",
-    mobile_number: "+910000000004",
-    status: "Blocked",
-    role: "vendor",
-  },
-  {
-    id: 5,
-    user_key: "user5key",
-    owner_legal_name: "User Five",
-    mobile_number: "+910000000005",
-    status: "New",
-    role: "user",
-  },
-  {
-    id: 6,
-    user_key: "user6key",
-    owner_legal_name: "User Six",
-    mobile_number: "+910000000006",
-    status: "Active",
-    role: "user",
-  },
-  {
-    id: 7,
-    user_key: "user7key",
-    owner_legal_name: "User Seven",
-    mobile_number: "+910000000007",
-    status: "Inactive",
-    role: "vendor",
-  },
-  {
-    id: 8,
-    user_key: "user8key",
-    owner_legal_name: "User Eight",
-    mobile_number: "+910000000008",
-    status: "Blocked",
-    role: "vendor",
-  },
-  {
-    id: 9,
-    user_key: "user9key",
-    owner_legal_name: "User Nine",
-    mobile_number: "+910000000009",
-    status: "New",
-    role: "user",
-  },
-  {
-    id: 10,
-    user_key: "user10key",
-    owner_legal_name: "User Ten",
-    mobile_number: "+910000000010",
-    status: "Active",
-    role: "vendor",
-  },
-];
-
-const PendingRequests = ({ navigation }) => {
+const PendingRequests = ({ navigation, orders }) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [users, setUsers] = useState(USERS);
-  const [isLoading, setIsLoading] = useState(false);
+  // const [users, setUsers] = useState(USERS);
+  // const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const isLoading = useSelector(selectAuthloader);
+  const pendingOrders = orders.filter(
+    (data) => data?.order?.orderStatus === "PENDING"
+  );
+  // const requestedUsers= pendingOrders.map(order => order.courier?.user).filter(Boolean);
+  // console.log(
+  //   "this is orders in pending request",
+  //   JSON.stringify(pendingOrders, null, 2)
+  // );
+  const filteredUsers = pendingOrders?.courier?.userUsers.filter((user) => {
+    const fullName = order?.courier?.user?.fullName?.toLowerCase() || "";
+    const contactNo = order?.courier?.user?.contactNo || "";
 
+    const query = searchQuery.toLowerCase();
 
-  const filteredUsers = users.filter((user) => {
-    const matchesSearch =
-      user?.owner_legal_name
-        ?.toLowerCase()
-        .includes(searchQuery.toLowerCase()) ||
-      user?.mobile_number?.includes(searchQuery);
-    return matchesSearch ;
+    return fullName.includes(query) || contactNo.includes(query);
   });
 
-  const handleCardPress=()=>{
-    navigation.navigate("RequestDetailScreen");
-  // console.log("card pressed")
-  }
-  const handleRefresh = async () => {};
+  const handleCardPress = (pendingOrder) => {
+  // console.log("Navigating with:", pendingOrder); // debug
+  navigation.navigate("RequestDetailScreen", { pendingOrder }); 
+};
 
+
+  const handleRefresh = async () => {};
   return (
     <SafeAreaView style={styles.container}>
       <MyStatusBar />
 
       {searchBar()}
-      {isLoading ? (<UserCardLoader count={10} />):(
-      <FlatList
-        refreshing={refreshing}
-        onRefresh={handleRefresh}
-        data={filteredUsers}
-        renderItem={({ item }) => <UserInfo user={item} handleCardPress={handleCardPress}/>}
-        keyExtractor={(item) => item?.id?.toString()}
-        contentContainerStyle={styles.listContainer}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
-        showsVerticalScrollIndicator={false}
-        ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            <Icon name="account-search" size={60} color={Colors.grayColor} />
-            <Text style={styles.emptyText}>No users found</Text>
-          </View>
-        }
-      />)}
+      {isLoading ? (
+        <UserCardLoader count={10} />
+      ) : (
+        <FlatList
+          refreshing={refreshing}
+          onRefresh={handleRefresh}
+          data={pendingOrders}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => handleCardPress(item)}
+            >
+              <UserInfo user={item?.courier?.user} />
+            </TouchableOpacity>
+          )}
+          keyExtractor={(item) => item?.courier?.courierId?.toString()}
+          contentContainerStyle={styles.listContainer}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <Icon name="account-search" size={60} color={Colors.grayColor} />
+              <Text style={styles.emptyText}>No users found</Text>
+            </View>
+          }
+        />
+      )}
     </SafeAreaView>
   );
 
-
-
-function searchBar() {
+  function searchBar() {
     return (
       <View
         style={{
-          marginVertical:10,
+          marginVertical: 10,
           marginHorizontal: 20,
           flexDirection: "row",
           alignItems: "center",
@@ -187,11 +122,9 @@ function searchBar() {
             onChangeText={(text) => setSearchQuery(text)}
           />
         </View>
-    
       </View>
     );
   }
-
 };
 
 const styles = StyleSheet.create({
@@ -239,12 +172,12 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     paddingBottom: 16,
-    flexGrow: 1
+    flexGrow: 1,
   },
   separator: {
     height: 1,
     backgroundColor: Colors.extraLightGrayColor,
-    marginLeft: 78, 
+    marginLeft: 78,
   },
   emptyContainer: {
     flex: 1,
@@ -257,7 +190,6 @@ const styles = StyleSheet.create({
     color: Colors.grayColor,
     marginTop: 12,
   },
-
 });
 
 export default PendingRequests;

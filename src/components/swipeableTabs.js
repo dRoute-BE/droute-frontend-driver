@@ -95,7 +95,7 @@ const style = StyleSheet.create({
     borderBottomColor:Colors.primaryColor,
   },
   tabButtonText: {
-    fontSize: 14,
+    fontSize: 13,
     color: Colors.grayColor,
   },
   tabButtonTextActive: {

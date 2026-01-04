@@ -13,7 +13,7 @@ export const PASSWORD_REGEX = /^(?=.*[A-Za-z])(?=.*\d).{8,20}$/;
 
 export const PHONE_REGEX = /^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/;
 export const VEHICLE_NUMBER_REGEX =/^[A-Z0-9]{8,11}$/;
-export const DL_REGEX = /^[A-Z0-9]{8,11}$/;
+export const DL_REGEX = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,}$/;
 
 
 export const IFSC_REGEX = /^[A-Z]{4}0[A-Z0-9]{6}$/;

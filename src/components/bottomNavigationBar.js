@@ -122,7 +122,9 @@ const BottomNavigationBar = ({ navigation }) => {
                       shadowRadius: 5,
                       elevation: 8,
                     }}
+
                   >
+                    
                     <Ionicons
                       name="add"
                       size={35}

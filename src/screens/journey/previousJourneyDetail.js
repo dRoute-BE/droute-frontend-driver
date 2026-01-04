@@ -21,7 +21,7 @@ const { width } = Dimensions.get("window");
 const PACKAGES = [
 {
   id: "PCL2025",
-  image: "https://images.unsplash.com/photo-1701615004837-40d8573b6652?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHVzZXJ8ZW58MHx8MHx8fDA%3D", 
+  image: "https://thumbs.dreamstime.com/b/delivery-man-blue-uniform-handing-parcel-box-to-recipient-courier-service-concept-84275323.jpg?w=768", 
   phone: "9876543210",
   pickup: {
     address: "101 Alpha Street nksn njsnn njnsj bbdj jdjne jndjn nnd jnjsj",
@@ -33,7 +33,7 @@ const PACKAGES = [
 },
 {
   id: "PCL202s5",
-  image: "https://images.unsplash.com/photo-1701615004837-40d8573b6652?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHVzZXJ8ZW58MHx8MHx8fDA%3D", 
+  image: "https://thumbs.dreamstime.com/b/delivery-man-blue-uniform-handing-parcel-box-to-recipient-courier-service-concept-84275323.jpg?w=768", 
   phone: "9876543210",
   pickup: {
     address: "101 Alpha Street nksn njsnn njnsj bbdj jdjne jndjn nnd jnjsj",

@@ -12,6 +12,7 @@ import {
   commonStyles,
   screenWidth,
 } from "../constants/styles";
+import { trimText } from "../utils/commonMethods";
 
 export function TicketLoaderCard({ count = 1 }) {
   const shimmerValue = useRef(new Animated.Value(0)).current;
@@ -60,11 +61,11 @@ export function TicketLoaderCard({ count = 1 }) {
   return <>{Array.from({ length: count }, renderSkeletonCard)}</>;
 }
 
-export function SupportTicket({ issue, navigation }) {
+export function SupportTicket({ issue }) {
   return (
-    <TouchableOpacity
+    <View
     activeOpacity={0.7}
-      onPress={() => navigation.navigate("SupportIssuesDetail", { issue })}
+      
       style={styles.userItem}
     >
       <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -77,9 +78,13 @@ export function SupportTicket({ issue, navigation }) {
       </View>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Text style={styles.title}>Title: </Text>
-        <Text style={styles.description}>{issue?.title}</Text>
+        <Text style={styles.description}>{trimText(issue?.title,50)}</Text>
       </View>
-    </TouchableOpacity>
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <Text style={styles.title}>description: </Text>
+        <Text style={styles.description}>{trimText(issue?.description,50)}</Text>
+      </View>
+    </View>
   );
 }
 

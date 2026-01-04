@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { View, StyleSheet } from "react-native";
 import LottieView from "lottie-react-native";
 
 export const DottedLoader = () => {
@@ -56,3 +56,60 @@ export const DottedBlackLoader = () => {
     </View>
   );
 };
+
+export const LottieSuccess = () => {
+  return (
+    <LottieView
+      source={require("./success.json")}
+      autoPlay
+      loop={false}
+      style={styles.lottieAnimation}
+    />
+  );
+};
+
+export const LottieFaiure = () => {
+  return (
+    <LottieView
+      source={require("./failure.json")}
+      autoPlay
+      loop={true}
+      style={styles.lottieAnimation}
+    />
+  );
+};
+export const LottieWarning = () => {
+  return (
+    <View
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        justifyContent: "center",
+        alignItems: "center",
+        // backgroundColor: "rgba(182, 206, 232, 0.3)",
+        zIndex: 999,
+      }}
+    >
+      <LottieView
+        source={require("./warning.json")}
+        autoPlay
+        loop
+        style={{
+          width: 100,
+          height: 100,
+        }}
+      />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  lottieAnimation: {
+    width: 100,
+    height: 100,
+    marginBottom: 16,
+  },
+});

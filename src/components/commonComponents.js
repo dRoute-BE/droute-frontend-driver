@@ -477,7 +477,9 @@ export function reUsableOverlayWithButton(
   submitMethod,
   cancelMethod,
   visibility,
-  setVisibility
+  setVisibility,
+  submitButtonName,
+  cancelButtonName
 ) {
   return (
     <Overlay
@@ -501,7 +503,7 @@ export function reUsableOverlayWithButton(
               ...styles.dialogYesNoButtonStyle,
             }}
           >
-            <Text style={{ ...Fonts.blackColor14Medium }}>Cancel</Text>
+            <Text style={{ ...Fonts.blackColor14Medium }}>{cancelButtonName}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.8}
@@ -512,7 +514,7 @@ export function reUsableOverlayWithButton(
               ...styles.dialogYesNoButtonStyle,
             }}
           >
-            <Text style={{ ...Fonts.whiteColor14Medium }}>Submit</Text>
+            <Text style={{ ...Fonts.whiteColor14Medium }}>{submitButtonName}</Text>
           </TouchableOpacity>
         </View>
       </View>

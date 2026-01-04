@@ -1,8 +1,4 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { getDriverByDriverIdAPI, resetPasswordAPI, signInAPI } from "../../utils/api/authApi";
-import { registerAPI } from "../../utils/api/authApi";
-import { sendOtpAPI } from "../../utils/api/authApi";
-import axios from "axios";
 import { uploadSingleDocumentAPI } from "../../utils/api/documentApi";
 import { handleAxiosError } from "./authThunk";
 

@@ -14,9 +14,11 @@ import {
   screenWidth,
 } from "../constants/styles";
 
-export function UserInfo({ user, handleCardPress }) {
+export function UserInfo({ user }) {
+
+  // console.log()
   return (
-    <TouchableOpacity activeOpacity={0.7} onPress={handleCardPress} style={styles.userItem}>
+    <View activeOpacity={0.7}  style={styles.userItem}>
       {user?.avatar ? (
         <Image source={{ uri: user?.avatar }} style={styles.avatar} />
       ) : (
@@ -29,16 +31,16 @@ export function UserInfo({ user, handleCardPress }) {
       )}
 
       <View style={styles.userInfo}>
-        <Text style={styles.userName}>{user?.owner_legal_name || "N/A"}</Text>
-        <Text style={styles.userMobile}>{user?.mobile_number || "N/A"}</Text>
+        <Text style={styles.userName}>{user?.fullName || "N/A"}</Text>
+        <Text style={styles.userMobile}>{user?.contactNo || "N/A"}</Text>
       </View>
 
       <View style={[styles.timeBadge]}>
-        <Text style={[styles.timeText, { color: Colors.grayColor }]}>
+        {/* <Text style={[styles.timeText, { color: Colors.grayColor }]}>
           20 min ago
-        </Text>
+        </Text> */}
       </View>
-    </TouchableOpacity>
+    </View>
   );
 }
 

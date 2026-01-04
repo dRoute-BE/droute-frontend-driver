@@ -6,88 +6,148 @@ import {
   TouchableOpacity,
   Animated,
 } from "react-native";
-import {
-  Colors,
-  commonStyles,
-  Fonts,
-  screenWidth,
-} from "../constants/styles";
+import { Colors, commonStyles, Fonts, screenWidth } from "../constants/styles";
 import {
   MaterialIcons,
   MaterialCommunityIcons,
   FontAwesome,
 } from "@expo/vector-icons";
-
-export const JourneyCard = ({ journey ,method}) => {
+import { formatDateTime, getDimensionUnitAbbreviation, getWeightUnitAbbreviation } from "../utils/commonMethods";
+// Journey =  [
+//   {
+//     "journeyId": 1,
+//     "driverId": 1,
+//     "journeySource": {
+//       "locationId": 2,
+//       "longitude": "77.0941087",
+//       "latitude": "28.4921191",
+//       "address": "U-46/24, Gali Number 5 NATHUPURA, 25, U Block, U Block, DLF Phase 3, Sector 24, Gurugram, Haryana 122022, India",
+//       "city": "Gurugram",
+//       "pinCode": null,
+//       "country": "India"
+//     },
+//     "journeyDestination": {
+//       "locationId": 1,
+//       "longitude": "84.0188781",
+//       "latitude": "24.9560393",
+//       "address": "Sasaram Junction, Dilia, Sasaram, Bihar 821115, India",
+//       "city": "Sasaram",
+//       "pinCode": null,
+//       "country": "India"
+//     },
+//     "visitedStateDuringJourney": "Bihar,Delhi,Haryana,Uttar Pradesh",
+//     "availableLength": 5,
+//     "availableWidth": 3,
+//     "availableHeight": 3,
+//     "availableSpaceMeasurementType": "METERS",
+//     "availableWeight": 500,
+//     "availableWeightMeasurementType": "KILOGRAMS",
+//     "status": "NOT_STARTED",
+//     "expectedDepartureDateTime": "2025-06-08T00:38:00",
+//     "expectedArrivalDateTime": "2025-06-10T00:38:00"
+//   }
+export const JourneyCard = ({ journey }) => {
   return (
-    <TouchableOpacity activeOpacity={0.7} onPress={method} style={styles.card}>
+    <View style={styles.card}>
       <View style={styles.routeContainer}>
         <View style={styles.locationContainer}>
-          <MaterialIcons name="location-on" size={20} color={Colors.primaryColor} />
+          <MaterialIcons
+            name="location-on"
+            size={20}
+            color={Colors.primaryColor}
+          />
           <View style={styles.fromContainer}>
             <Text style={styles.label}>From:</Text>
             <Text style={styles.descriptionText}>
-              {journey.from.address}
+              {" "}
+              {journey?.journeySource?.city}
             </Text>
           </View>
         </View>
 
-        <MaterialIcons name="arrow-right-alt" size={20} color={Colors.grayColor} style={styles.arrowIcon} />
+        <MaterialIcons
+          name="arrow-right-alt"
+          size={20}
+          color={Colors.grayColor}
+          style={styles.arrowIcon}
+        />
 
         <View style={styles.toContainer}>
           <Text style={styles.label}>To:</Text>
-          <Text style={styles.descriptionText}>{journey.to}</Text>
+          <Text style={styles.descriptionText}>
+            {" "}
+            {journey?.journeyDestination?.city}
+          </Text>
         </View>
       </View>
 
       <View style={styles.divider} />
 
       <View style={styles.timeContainer}>
-        <MaterialCommunityIcons name="clock-time-four-outline" size={18} color={Colors.blackColor} />
+        <MaterialCommunityIcons
+          name="clock-time-four-outline"
+          size={18}
+          color={Colors.blackColor}
+        />
         <View style={styles.timeTextContainer}>
-          <Text style={styles.label}>Departure:</Text>
-          <Text style={styles.descriptionText}>{journey.departure.date}, {journey.departure.time}</Text>
+          <Text style={styles.label}>Departure:{" "}</Text>
+          <Text style={styles.descriptionText}>
+             {formatDateTime(journey?.expectedDepartureDateTime)}
+          </Text>
         </View>
       </View>
 
       <View style={styles.timeContainer}>
-        <MaterialCommunityIcons name="clock-time-four-outline" size={18} color={Colors.blackColor} />
+        <MaterialCommunityIcons
+          name="clock-time-four-outline"
+          size={18}
+          color={Colors.blackColor}
+        />
         <View style={styles.timeTextContainer}>
-          <Text style={styles.label}>Arrival:</Text>
-          <Text style={styles.descriptionText}>{journey.arrival.date}, {journey.arrival.time}</Text>
+          <Text style={styles.label}>Arrival:{" "}</Text>
+          <Text style={styles.descriptionText}>
+            {formatDateTime(journey?.expectedArrivalDateTime)}
+          </Text>
         </View>
       </View>
 
       <View style={styles.divider} />
 
       <View style={styles.spaceContainer}>
-        <View style={{...commonStyles.rowSpaceBetween}}>
-        <FontAwesome name="cube" size={18} color={Colors.blackColor} />
-        <View style={styles.spaceTextContainer}>
-          <Text style={styles.label}>Available Space:</Text>
-          <Text style={styles.descriptionText}>200 ft^3</Text>
+        <View style={{ ...commonStyles.rowSpaceBetween }}>
+          <FontAwesome name="cube" size={18} color={Colors.blackColor} />
+          <View style={styles.spaceTextContainer}>
+            <Text style={styles.label}>Available Space:</Text>
+            <Text style={styles.descriptionText}>{journey?.availableLength*journey?.availableWidth*journey?.availableHeight}{" "}{getDimensionUnitAbbreviation(journey?.availableSpaceMeasurementType)}^3</Text>
+          </View>
         </View>
-        </View>
-        <View style={{...commonStyles.rowSpaceBetween}}>
-        <FontAwesome name="cube" size={18} color={Colors.blackColor} />
-        <View style={styles.spaceTextContainer}>
-          <Text style={styles.label}>Weight Capacity:</Text>
-          <Text style={styles.descriptionText}>500 kg</Text>
-        </View>
+        <View style={{ ...commonStyles.rowSpaceBetween }}>
+          <FontAwesome name="balance-scale" size={18} color={Colors.blackColor} />
+          <View style={styles.spaceTextContainer}>
+            <Text style={styles.label}>Weight Capacity:</Text>
+            <Text style={styles.descriptionText}>{journey?.availableWeight}{" "}{getWeightUnitAbbreviation(journey?.availableWeightMeasurementType)}</Text>
+          </View>
         </View>
       </View>
 
-     
       <View style={styles.bottomContainer}>
         <View style={styles.packagesButton}>
-          <Text style={styles.packagesText}>Packages: {journey.packages}</Text>
+          <Text style={styles.packagesText}>Total Orders: {journey?.totalConfirmedPackages || 0}</Text>
         </View>
 
         <View>
-          <Text style={{...Fonts.primaryColor12SemiBold ,fontWeight:"700",color:"green"}}>Completed</Text>
+          <Text
+            style={{
+              ...Fonts.primaryColor12SemiBold,
+              fontWeight: "700",
+              color: journey?.status==="COMPLETED"?"green":Colors.darkOrangeColor,
+            }}
+          >
+            {journey?.status}
+          </Text>
         </View>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 };
 
@@ -137,7 +197,12 @@ export const LoadingJourneyCard = ({ count = 1 }) => {
       <View style={styles.divider} />
       {renderPlaceholder("50%")}
       <View style={styles.bottomContainer}>
-        <View style={[styles.packagesButton, { backgroundColor: Colors.extraLightGrayColor }]}>
+        <View
+          style={[
+            styles.packagesButton,
+            { backgroundColor: Colors.extraLightGrayColor },
+          ]}
+        >
           {renderPlaceholder("60%", 12, 0)}
         </View>
         {renderPlaceholder("25%", 12, 0)}
@@ -174,7 +239,7 @@ const styles = StyleSheet.create({
   fromContainer: {
     ...commonStyles.rowAlignCenter,
     marginLeft: 8,
-     flexWrap: "wrap",
+    flexWrap: "wrap",
   },
   label: {
     ...Fonts.blackColor12Bold,
@@ -206,7 +271,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   spaceContainer: {
-   ...commonStyles.rowSpaceBetween,
+    ...commonStyles.rowSpaceBetween,
     marginBottom: 10,
   },
   spaceTextContainer: {
@@ -231,7 +296,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   viewDetailsText: {
-    
     fontWeight: "bold",
     fontSize: 12,
   },

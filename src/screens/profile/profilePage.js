@@ -22,6 +22,8 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { fullImageContainer } from "../../components/commonComponents";
 import { showFullImageFunction } from "../../utils/commonMethods";
+import { logoutUser } from "../../redux/slice/authSlice";
+import { useDispatch } from "react-redux";
 
 const image = "https://cdn.pixabay.com/photo/2024/05/26/10/15/bird-8788491_1280.jpg";
 const Profile = ({ navigation }) => {
@@ -29,8 +31,7 @@ const Profile = ({ navigation }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [showLogoutSheet, setshowLogoutSheet] = useState(false);
   const [avatar, setAvatar] = useState(image);
-
-
+  const dispatch = useDispatch();
 
   return (
     <View style={{ flex: 1, backgroundColor: Colors.bodyBackColor }}>
@@ -84,11 +85,7 @@ const Profile = ({ navigation }) => {
             iconName: "person",
             onPress: () => navigation.navigate("EditProfile"),
           })}
-          {profileOption({
-            option: "Change Password",
-            iconName: "key",
-            onPress: () => navigation.navigate("ChangePassword"),
-          })}
+        
 
           {profileOption({
             option: "Terms & Conditions",
@@ -241,6 +238,7 @@ const Profile = ({ navigation }) => {
               <TouchableOpacity
                 activeOpacity={0.8}
                 onPress={() => {
+                  dispatch(logoutUser());
                   setshowLogoutSheet(false);
                   console.log(
                     "User logged out successfully in profileScreen and navigating to Signin"

@@ -25,6 +25,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { useDispatch, useSelector } from "react-redux";
 import { showSnackbar } from "../../redux/slice/snackbarSlice";
 import { selectUser } from "../../redux/selector/authSelector";
+import { postJourney } from "../../redux/thunk/journeyThunk";
 const suggestionStateList = [
   "Andhra Pradesh",
   "Arunachal Pradesh",
@@ -58,171 +59,6 @@ const suggestionStateList = [
   "Jammu and Kashmir",
 ];
 
-const PostJourney = ({ route, navigation }) => {
-  const { data } = route?.params;
-  // route?.params;
-  const [dropdownVisible, setDropdownVisible] = useState(false);
-  const [selectedForm, setSelectedForm] = useState("locationDetail");
-  const [selectedField, setSelectedField] = useState(null);
-  const [departureDateTime, setDepartureDateTime] = useState("");
-  const [arrivalDateTime, setArrivalDateTime] = useState("");
-  const [isPickerVisible, setPickerVisible] = useState(false);
-  const [weight, setWeight] = useState(null);
-  const [height, setHeight] = useState(null);
-  const [width, setWidth] = useState(null);
-  const [length, setLength] = useState(null);
-  const [lengthUnit, setLengthUnit] = useState(null);
-  const [weightUnit, setWeightUnit] = useState(null);
-  const [stateList, setStateList] = useState([]);
-  const showPicker = () => setPickerVisible(true);
-  const hidePicker = () => setPickerVisible(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const dispatch = useDispatch();
-
-  const user = useSelector(selectUser);
-  // console.log("date time is ", departureDateTime);
-
-  // console.log("Data to be submitted:", data);
-
-  const handleSubmit = async () => {
-    // Validate required fields
-    if (
-      !departureDateTime ||
-      !arrivalDateTime ||
-      !weight ||
-      !height ||
-      !width ||
-      !length ||
-      !lengthUnit ||
-      !weightUnit ||
-      stateList.length === 0
-    ) {
-      await dispatch(
-        showSnackbar({
-          message: "Please Fill all The Details First",
-          type: "error",
-          time: 3000,
-        })
-      );
-      return;
-    }
-
-    // Date formatting function
-    const formatDateTime = (dateTimeStr) => {
-      if (!dateTimeStr) return null;
-
-      try {
-        const [datePart, timePart] = dateTimeStr.split(", ");
-        const [day, month, year] = datePart.split("/");
-        return `${year}-${month.padStart(2, "0")}-${day.padStart(
-          2,
-          "0"
-        )}T${timePart}:00`;
-      } catch (error) {
-        console.error("Error formatting date:", error);
-        return null;
-      }
-    };
-
-    // Prepare the data object
-
-    const journeySource = await fetchAddressComponent(
-      data?.sourceCoordinate?.latitude,
-      data?.sourceCoordinate?.longitude
-    );
-    const journeyDestination = await fetchAddressComponent(
-      data?.destinationCoordinate?.latitude,
-      data?.destinationCoordinate?.longitude
-    );
-
-    const journeyData = {
-      driverId: user?.driverId,
-      journeySource: journeySource,
-      journeyDestination: journeyDestination,
-      visitedStateDuringJourney: stateList,
-
-      availableLength: length,
-      availableWidth: width,
-      availableHeight: height,
-      availableSpaceMeasurementType: lengthUnit,
-
-      availableWeight: weight,
-      availableWeightMeasurementType: weightUnit,
-      expectedDepartureDateTime: formatDateTime(departureDateTime),
-      expectedArrivalDateTime: formatDateTime(arrivalDateTime),
-    };
-
-    setIsLoading(true);
-
-    try {
-      console.log(
-        "Formatted Journey data to be submitted:",
-        JSON.stringify(journeyData, null, 2)
-      );
-
-      // Here you would typically make your API call
-      // Example: await api.post('/journeys', journeyData);
-
-      // Show success message
-      await dispatch(
-        showSnackbar({
-          message: "Journey created successfully!",
-          type: "success",
-          time: 3000,
-        })
-      );
-
-      // Optionally reset form or navigate away
-      // resetForm();
-    } catch (error) {
-      console.error("Submission error:", error);
-      await dispatch(
-        showSnackbar({
-          message: "Failed to create journey. Please try again.",
-          type: "error",
-          time: 3000,
-        })
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  const toggleState = (state) => {
-    if (stateList.includes(state)) {
-      setStateList(stateList.filter((s) => s !== state));
-    } else {
-      setStateList([...stateList, state]);
-    }
-  };
-  const removeState = (stateToRemove) => {
-    setStateList(stateList.filter((state) => state !== stateToRemove));
-  };
-
-  const handleDatePick = (date) => {
-    const formatted = date.toLocaleString([], {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-
-    if (selectedField === "departure") {
-      setDepartureDateTime(formatted);
-    } else if (selectedField === "arrival") {
-      setArrivalDateTime(formatted);
-    }
-
-    hidePicker();
-  };
-
-  const handleVisibility = (form) => {
-    const formKey = String(form);
-    if (selectedForm !== formKey) {
-      setSelectedForm(formKey);
-    }
-  };
-
   const CapacitySection = ({
     weightUnit,
     setWeightUnit,
@@ -248,7 +84,7 @@ const PostJourney = ({ route, navigation }) => {
       <View style={styles.section}>
         {typeSection(lengthUnit, setLengthUnit, "Select Length Unit", false, [
           { label: "meter", value: "m" },
-          { label: "foot", value: "f" },
+          { label: "foot", value: "ft" },
           { label: "Centimeter", value: "cm" },
         ])}
       </View>
@@ -320,6 +156,194 @@ const PostJourney = ({ route, navigation }) => {
       </View>
     );
   };
+const PostJourney = ({ route, navigation }) => {
+  const { data } = route?.params;
+  // route?.params;
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [selectedForm, setSelectedForm] = useState("locationDetail");
+  const [selectedField, setSelectedField] = useState(null);
+  const [departureDateTime, setDepartureDateTime] = useState("");
+  const [arrivalDateTime, setArrivalDateTime] = useState("");
+  const [isPickerVisible, setPickerVisible] = useState(false);
+  const [weight, setWeight] = useState(null);
+  const [height, setHeight] = useState(null);
+  const [width, setWidth] = useState(null);
+  const [length, setLength] = useState(null);
+  const [lengthUnit, setLengthUnit] = useState(null);
+  const [weightUnit, setWeightUnit] = useState(null);
+  const [stateList, setStateList] = useState([]);
+  const showPicker = () => setPickerVisible(true);
+  const hidePicker = () => setPickerVisible(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+
+  const user = useSelector(selectUser);
+  console.log("date time is ", departureDateTime);
+
+  // console.log("Data to be submitted:", data);
+
+  const handleSubmit = async () => {
+    // Validate required fields
+    if (
+      !departureDateTime ||
+      !arrivalDateTime ||
+      !weight ||
+      !height ||
+      !width ||
+      !length ||
+      !lengthUnit ||
+      !weightUnit ||
+      stateList.length === 0
+    ) {
+      await dispatch(
+        showSnackbar({
+          message: "Please Fill all The Details First",
+          type: "error",
+          time: 3000,
+        })
+      );
+      return;
+    }
+
+    // Date formatting function
+const formatDateTime = (dateTimeStr) => {
+  if (!dateTimeStr) return null;
+
+  try {
+    const [datePart, timePartWithMeridiemRaw] = dateTimeStr.split(", ");
+    const [month, day, year] = datePart.split("/");
+
+    const timePartWithMeridiem = timePartWithMeridiemRaw.replace(/\u202F|\u00A0/g, " ");
+    const [time, meridiem] = timePartWithMeridiem.split(" ");
+    let [hours, minutes] = time.split(":").map(Number);
+
+    if (meridiem.toLowerCase() === "pm" && hours !== 12) {
+      hours += 12;
+    } else if (meridiem.toLowerCase() === "am" && hours === 12) {
+      hours = 0;
+    }
+
+    return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}T${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:00`;
+  } catch (error) {
+    console.error("Error formatting date:", error);
+    return null;
+  }
+};
+
+
+    // Prepare the data object
+
+    const journeySource = await fetchAddressComponent(
+      data?.sourceCoordinate?.latitude,
+      data?.sourceCoordinate?.longitude
+    );
+    const journeyDestination = await fetchAddressComponent(
+      data?.destinationCoordinate?.latitude,
+      data?.destinationCoordinate?.longitude
+    );
+
+    const journeyData = {
+      driverId: user?.driverId,
+      journeySource: journeySource,
+      journeyDestination: journeyDestination,
+      visitedStateDuringJourney: stateList.join(','),
+
+      availableLength: length,
+      availableWidth: width,
+      availableHeight: height,
+      availableSpaceMeasurementType: lengthUnit,
+
+      availableWeight: weight,
+      availableWeightMeasurementType: weightUnit,
+      expectedDepartureDateTime: formatDateTime(departureDateTime),
+      expectedArrivalDateTime: formatDateTime(arrivalDateTime),
+    };
+
+    setIsLoading(true);
+
+    try {
+      console.log(
+        "Formatted Journey data to be submitted:",
+        JSON.stringify(journeyData, null, 2)
+      );
+
+      const response = await dispatch(postJourney(journeyData));
+
+      if (postJourney.fulfilled.match(response)) {
+        console.log("Journey created successfully:", response.payload);
+
+        await dispatch(
+          showSnackbar({
+            message: response?.payload?.message || "Journey created successfully.",
+            type: "success",
+            time: 3000,
+          })
+        );
+
+      navigation.navigate("BottomNavigationBar");
+
+      } else {
+        console.error("Failed to create journey:", response.payload);
+        await dispatch(
+          showSnackbar({
+            message: response?.payload?.message || "Failed to create journey.",
+            type: "error",
+            time: 3000,
+          })
+        );
+
+        return;
+       
+      }
+    } catch (error) {
+      console.error("Submission error:", error);
+      await dispatch(
+        showSnackbar({
+          message: "Failed to create journey. Please try again.",
+          type: "error",
+          time: 3000,
+        })
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const toggleState = (state) => {
+    if (stateList.includes(state)) {
+      setStateList(stateList.filter((s) => s !== state));
+    } else {
+      setStateList([...stateList, state]);
+    }
+  };
+  const removeState = (stateToRemove) => {
+    setStateList(stateList.filter((state) => state !== stateToRemove));
+  };
+
+  const handleDatePick = (date) => {
+    const formatted = date.toLocaleString([], {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    if (selectedField === "departure") {
+      setDepartureDateTime(formatted);
+    } else if (selectedField === "arrival") {
+      setArrivalDateTime(formatted);
+    }
+
+    hidePicker();
+  };
+
+  const handleVisibility = (form) => {
+    const formKey = String(form);
+    if (selectedForm !== formKey) {
+      setSelectedForm(formKey);
+    }
+  };
+
 
   return (
     <ScrollView scrollEnabled={!dropdownVisible} style={styles.container}>

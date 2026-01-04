@@ -1,6 +1,6 @@
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
-import { Alert } from "react-native";
+import { Alert, Linking, Platform } from "react-native";
 import Key from "../constants/key";
 import { useSelector } from "react-redux";
 import { selectUser } from "../redux/selector/authSelector";
@@ -281,7 +281,7 @@ export const fetchAddressComponent = async (latitude, longitude) => {
       pinCode: pinCode ? pinCode.long_name : "",
       country: country ? country.long_name : "",
     };
-    console.log("address data in fetchAddress ", addressData);
+    // console.log("address data in fetchAddress ", addressData);    
     return addressData;
   } catch (error) {
     console.log("Error fetching address:", error);
@@ -304,3 +304,56 @@ export const trimText = (text, maxLength) => {
   if (typeof text !== "string") return "";
   return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
 };
+export const formatDateTime = (isoString) => {
+  const date = new Date(isoString);
+  return date.toLocaleString("en-US", {
+    weekday: "long",    // e.g., Sunday
+    year: "numeric",    // e.g., 2025
+    month: "long",      // e.g., June
+    day: "numeric",     // e.g., 8
+    hour: "numeric",    // e.g., 12
+    minute: "2-digit",  // e.g., 38
+    hour12: true,       // AM/PM format
+  });
+};
+
+// Map enum names to abbreviations
+const weightUnitAbbreviations = {
+  GRAMS: "g",
+  KILOGRAMS: "kg",
+  POUNDS: "lb",
+  OUNCES: "oz",
+  MILLIGRAMS: "mg",
+  TONNES: "Ton",
+};
+
+
+export const getWeightUnitAbbreviation = (enumName) => {
+  return weightUnitAbbreviations[enumName] || enumName;
+};
+
+
+// Map enum names to abbreviations for DimensionUnit
+const dimensionUnitAbbreviations = {
+  CENTIMETERS: "cm",
+  METERS: "m",
+  INCHES: "in",
+  FEET: "ft",
+  MILLIMETERS: "mm",
+};
+
+export const getDimensionUnitAbbreviation = (enumName) => {
+  return dimensionUnitAbbreviations[enumName] || enumName;
+};
+
+export  const openGoogleMaps = (latitude, longitude, label = 'dRoute Service') => {
+  const encodedLabel = encodeURIComponent(label);
+  const url = Platform.select({
+    ios: `maps://?q=${encodedLabel}&ll=${latitude},${longitude}`,
+    android: `geo:${latitude},${longitude}?q=${latitude},${longitude}(${encodedLabel})`,
+  });
+  Linking.openURL(url);
+};
+
+
+
